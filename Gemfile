@@ -65,3 +65,8 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+
+gem "uri"
+gem "down"
+gem "mini_mime"
+gem "net-http"

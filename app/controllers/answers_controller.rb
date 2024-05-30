@@ -1,5 +1,6 @@
-require 'net/http'
-require 'uri'
+require "uri"
+require "down"
+require "mini_mime"
 
 class AnswersController < ApplicationController
   def answer
@@ -27,7 +28,7 @@ class AnswersController < ApplicationController
   private
 
   def valid_url?(url)
-    uri = URI.parse(url)
+    uri = URI(url)
 
     uri.is_a?(URI::HTTP) || uri.is_a?(URI::HTTPS)
     
@@ -35,19 +36,16 @@ class AnswersController < ApplicationController
       return false
   end
 
-  def image_url?(url) 
-    ext = url.slice(url.length, 3)
+  def image_url?(url)
+    str = url.to_s
+    str[6] = "//"
 
-    images = ["jpg", "png", "gif"]
-    images.each do |image|
-      if image == ext
-        return true
-      end  
-    end
+    tempfile = Down.download(str)
+    type = MiniMime.lookup_by_filename(tempfile.original_filename).content_type
+    tempfile.close
 
-    return false
-
-    rescue
-      return false
+    type.start_with?("image")
+  rescue
+    false
   end
 end
