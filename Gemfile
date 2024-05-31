@@ -68,5 +68,4 @@ end
 
 gem "uri"
 gem "down"
-gem "mini_mime"
-gem "net-http"
+gem "cgi"
